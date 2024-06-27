@@ -1,0 +1,267 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #212121; /* Dark background color */
+    color: #fff; /* White text color */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 80%;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #2f2f2f; /* Darker container background color */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Darker shadow */
+    margin-left: 20%;
+}
+
+.text-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.textfield {
+    flex: 1;
+    height: 70vh;
+    padding: 10px;
+    border: 2px solid #8b8888; /* Lighter border color */
+    border-radius: 10px;
+    resize: vertical;
+    background-color: #2f2f2f; /* Medium dark text field background color */
+    color: #fff; /* White text color */
+    resize: none;
+    margin-right: 5px; /* Space between text fields */
+}
+
+.textfield:last-child {
+    margin-right: 0; /* Remove margin-right for the last text field */
+}
+
+#submitButton {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #c13320; /* Dark red */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #be1c06; /* Green on hover */
+}
+
+button:active {
+    background-color: #c13320; /* Darker green on active */
+}
+
+.options-space {
+    position: absolute; /* Absolute positioning to place it on the left */
+    top: 0;
+    left: 0;
+    width: 20%; /* Width of the green space */
+    height: 100%; /* Full height of the container */
+    background-color: #171717; /* Green color */
+    opacity: 0.7;
+}
+
+
+.section-title {
+    font-size: 1.3em; /* Example: Larger font size for title */
+    padding-left: 10px;
+    margin-left: 20px;
+
+    margin-bottom: 5%;
+}
+
+.checkbox-label {
+    padding-left: 10px;
+}
+
+
+
+
+.parameter-select {
+    margin-left: 20px; /* Adjust the margin-left value to match the label */
+}
+
+.checkboxes {
+    margin-left: 20px
+}
+  
+#slider {
+    width: 100%;
+  }
+  
+  #sliderContainer {
+    text-align: center; /* Optional: center-align the slider and labels */
+    /*margin-top: 20px; /* Optional: adjust margin as needed */
+    margin-left:20px;
+    margin-right: 20px; 
+    
+    } 
+
+
+#sliderContainerConfidence {
+    text-align: center; /* Optional: center-align the slider and labels */
+    margin: 20px; /* Optional: adjust margin as needed */
+}
+
+.loading {
+    cursor: not-allowed;
+    opacity: 0.6;
+
+}
+.slider-label-left {
+    position: absolute;
+    left: 10%;
+    margin-top: 20px; /* Adjust as needed */
+}
+
+.slider-label-right {
+    position: absolute;
+    right: 10%;
+    margin-top: 20px; /* Adjust as needed */
+}
+
+.parameter-label-options {
+    
+    font-weight: bold;
+    color: #e58174; /* Optional: Adjust text color */
+}
+
+
+
+.parameter-label {
+    padding-left: 20px; /* Adds padding to the left of the label */
+    display: block; /* Ensures each label is on its own line */
+    font-weight: bold; /* Optional: Makes the label bold */
+    font-size: 1.1em; /* Optional: Adjusts font size */
+}
+
+.highlighted {
+    background-color: blue;    
+  }
+  
+#sliderConfidence {
+    width: 100%;
+}
+
+
+
+
+.search-input {
+    width: calc(100% - 16px); /* Adjust width for padding */
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 10px; /* Rounded corners */
+    border: 1px solid #ccc; /* Border color */
+    margin-top: 5px; /* Margin around the input */
+    margin-left: 5px; 
+}
+
+.section-title2 {
+    /*margin-bottom: 10px; /* Bottom margin for spacing */
+    font-size: 18px; /* Font size for title */
+    margin-left: 15px;
+    padding-top: 10px;
+}
+
+
+.top-section {
+    background-color: #171717;
+    height: 12%; /* Adjust height as needed */
+ 
+    border-bottom: 2px solid grey;
+    border-right: 2px solid grey;
+
+}
+
+
+.search-button {
+    position: absolute;
+    margin-bottom: 8%;
+    
+
+    color: black;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+        
+
+#sliderConfidence {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    width: 100%; /* Full width of container */
+    height: 10px; /* Height of the slider bar */
+    background: #007bff; /* Blue background color */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Adjust opacity if desired */
+    transition: opacity 0.15s ease-in-out; /* Smooth transition */
+    border-radius: 5px; /* Rounded corners */
+}
+
+#sliderConfidence::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    width: 20px; /* Width of the slider thumb */
+    height: 20px; /* Height of the slider thumb */
+    background: #cccccc; /* Grey background color */
+    cursor: pointer; /* Cursor style */
+    border-radius: 50%; /* Rounded shape */
+    border: 2px solid #999999; /* Border color */
+}
+
+#sliderConfidence::-moz-range-thumb {
+    width: 20px; /* Width of the slider thumb */
+    height: 20px; /* Height of the slider thumb */
+    background: #cccccc; /* Grey background color */
+    cursor: pointer; /* Cursor style */
+    border-radius: 50%; /* Rounded shape */
+    border: 2px solid #999999; /* Border color */
+}
+
+#slider {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    width: 100%; /* Full width of container */
+    height: 10px; /* Height of the slider bar */
+    background: #007bff; /* Blue background color */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Adjust opacity if desired */
+    transition: opacity 0.15s ease-in-out; /* Smooth transition */
+    border-radius: 5px; /* Rounded corners */
+}
+
+#slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    width: 20px; /* Width of the slider thumb */
+    height: 20px; /* Height of the slider thumb */
+    background: #cccccc; /* Grey background color */
+    cursor: pointer; /* Cursor style */
+    border-radius: 50%; /* Rounded shape */
+    border: 2px solid #999999; /* Border color */
+}
+
+#slider::-moz-range-thumb {
+    width: 20px; /* Width of the slider thumb */
+    height: 20px; /* Height of the slider thumb */
+    background: #cccccc; /* Grey background color */
+    cursor: pointer; /* Cursor style */
+    border-radius: 50%; /* Rounded shape */
+    border: 2px solid #999999; /* Border color */
+}
+
+#simMethod {
+    margin-top: 5%;
+}

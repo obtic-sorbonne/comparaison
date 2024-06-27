@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Comparison Interface</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="options-space">
+          <div class="top-section">
+            <div class="section-title2">Entities search</div>
+            <input type="search" id="search_entity" class="search-input" placeholder="Search...">
+
+        </div>
+            <div class="normal-section">    
+                <label for="similarityMethod" id='simMethod' class = "parameter-label">Similarity method</label>
+                
+                <select id="similarityMethod" class = "parameter-select">
+                    <option value="lexical">Lexical</option>
+                    <option value="embeddings">Embeddings</option>
+                    <option value="hybrid">Hybrid</option>
+                </select>
+                <div id="sliderContainerConfidence" >
+                  <div id="sliderValueConfidence"></div> 
+                  <input type="range" id="sliderConfidence" name="slider" min="0" max="1" value="0.7" step="0.01">
+                  <br>
+                  <label for="slider">% Confidence</label>
+                </div>
+                
+                <div id="containerLexical" class="checkboxes">
+                    <label for="embeddingsModelContainer1" class = "parameter-label-options">Lexical metric</label><br>
+                    <input type="radio" id="checkbox1_lexical" name="methods_lexical" value="JACCARD">
+                    <label for="checkbox1_lexical">Jaccard</label><br>
+                    <input type="radio" id="checkbox2_lexical" name="methods_lexical" value="LEVENSHTEIN">
+                    <label for="checkbox2_lexical">Levenshtein</label><br>
+                    <input type="radio" id="checkbox3_lexical" name="methods_lexical" value="HAMMING">
+                    <label for="checkbox3_lexical">Hamming</label><br>
+                    <input type="radio" id="checkbox4_lexical" name="methods_lexical" value="JARO-WINKLER">
+                    <label for="checkbox4_lexical">Jaro-Winkler</label><br>
+                  </div>
+                  <br>
+                
+                  <div id="containerEmbeddings" class="checkboxes" style="display:none;">
+                    <label for="embeddingsModelContainer1" class = "parameter-label-options">Vector distance metrics</label><br>
+                    <input type="radio" id="checkbox1_embeddings" name="methods_embeddings" value="COSINE">
+                    <label for="checkbox1_embeddings">Cosine</label><br>
+                    <input type="radio" id="checkbox2_embeddings" name="methods_embeddings" value="EUCLIDEAN">
+                    <label for="checkbox2_embeddings">Euclidean</label><br>
+                    <input type="radio" id="checkbox3_embeddings" name="methods_embeddings" value="DOT">
+                    <label for="checkbox3_embeddings">Dot product</label><br>
+                  </div>
+
+                  <br>
+
+                  <div id="embeddingsModelContainer" class="checkboxes" style="display:none;">
+                    <label for="embeddingsModelContainer1" class = "parameter-label-options">Embedding</label><br>
+                    <input type="radio" id="embeddingsModelContainer1" name="embeddings_model" value="minilm">
+                    <label for="embeddingsModelContainer1">MiniLM-L12-v2</label><br>
+                    <input type="radio" id="embeddingsModelContainer2" name="embeddings_model" value="bert_base">
+                    <label for="embeddingsModelContainer2">bert-base</label><br>
+                    <input type="radio" id="embeddingsModelContainer3" name="embeddings_model" value="distiluse">
+                    <label for="embeddingsModelContainer3">distiluse-base</label><br>
+                  </div>
+                  <br>
+                  <div id="sliderContainer" style="display:none;">
+                    <div id="sliderValue"></div> 
+                    <input type="range" id="slider" name="slider" min="0" max="1" value="0.5" step="0.01">
+                    <br>
+                    <label for="slider" class="slider-label-left" >Embeddings</label>
+                    <label for="slider" class="slider-label-right">Lexical</label>
+                  </div>  
+            </div>
+        </div>
+        <div class="text-container">
+            <div class="left-column"></div>
+            <div id="text1" class="textfield" placeholder="Text 1" contenteditable="true"></div>
+            <div id="text2" class="textfield" placeholder="Text 2" contenteditable="true"></div>
+        </div>
+        <button id="submitButton">Compare</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
