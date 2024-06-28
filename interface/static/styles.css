@@ -15,6 +15,8 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Darker shadow */
     margin-left: 20%;
+
+    margin-bottom: 50px;
 }
 
 .text-container {
@@ -34,6 +36,7 @@ body {
     color: #fff; /* White text color */
     resize: none;
     margin-right: 5px; /* Space between text fields */
+
 }
 
 .textfield:last-child {
@@ -175,7 +178,7 @@ button:active {
 
 .top-section {
     background-color: #171717;
-    height: 12%; /* Adjust height as needed */
+    height: 10%; /* Adjust height as needed */
  
     border-bottom: 2px solid grey;
     border-right: 2px solid grey;
@@ -203,7 +206,7 @@ button:active {
     appearance: none;
     width: 100%; /* Full width of container */
     height: 10px; /* Height of the slider bar */
-    background: #007bff; /* Blue background color */
+    background: #ffffff; /* Blue background color */
     outline: none; /* Remove outline */
     opacity: 0.7; /* Adjust opacity if desired */
     transition: opacity 0.15s ease-in-out; /* Smooth transition */
@@ -215,10 +218,10 @@ button:active {
     appearance: none;
     width: 20px; /* Width of the slider thumb */
     height: 20px; /* Height of the slider thumb */
-    background: #cccccc; /* Grey background color */
+    background: hsl(0, 72%, 57%);; /* Grey background color */
     cursor: pointer; /* Cursor style */
     border-radius: 50%; /* Rounded shape */
-    border: 2px solid #999999; /* Border color */
+    border: 2px solid hsl(0, 72%, 57%); /* Border color */
 }
 
 #sliderConfidence::-moz-range-thumb {
@@ -235,7 +238,7 @@ button:active {
     appearance: none;
     width: 100%; /* Full width of container */
     height: 10px; /* Height of the slider bar */
-    background: #007bff; /* Blue background color */
+    background: #ffffff; /* Blue background color */
     outline: none; /* Remove outline */
     opacity: 0.7; /* Adjust opacity if desired */
     transition: opacity 0.15s ease-in-out; /* Smooth transition */
@@ -247,7 +250,7 @@ button:active {
     appearance: none;
     width: 20px; /* Width of the slider thumb */
     height: 20px; /* Height of the slider thumb */
-    background: #cccccc; /* Grey background color */
+    background: hsl(0, 72%, 57%); /* Grey background color */
     cursor: pointer; /* Cursor style */
     border-radius: 50%; /* Rounded shape */
     border: 2px solid #999999; /* Border color */
@@ -264,4 +267,54 @@ button:active {
 
 #simMethod {
     margin-top: 5%;
+}
+
+.button-container {
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Center items vertically */
+    margin-left: 21%;
+    position: relative;
+}
+
+#exact-diff-button{
+
+    padding: 10px;
+    width: 100px;
+    position: relative;
+    top: 20px;
+    /* Additional styling */
+    background-color: #f0f0f0; /* Light gray background */
+    border: 1px solid #ccc; /* Gray border */
+    color: #333; /* Dark text color */
+    font-size: 13px; /* Font size */
+    text-align: center; /* Center text */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition */
+    border-radius: 5px;
+
+    
+}
+
+#reverse-button {
+    margin-left: 5px;
+    height: 40px;
+    width: 40px;
+
+    position:relative;
+    top: 20px;
+    background-color: rgb(155, 139, 139);
+    border-radius: 5px;
+
+}
+
+#exact-diff-button:hover {
+    /* Remove background color or set it to another color */
+    background-color: #cccccc; /* Transparent background on hover */
+    /* Or you can remove any existing background color */
+    /* background-color: unset; */
+}
+
+#reverse-button:hover {
+
+    background-color: rgb(147, 131, 131); /* Transparent background on hover */
 }

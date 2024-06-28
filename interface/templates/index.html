@@ -6,9 +6,16 @@
     <title>Text Comparison Interface</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/diff/4.0.2/diff.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/diff/4.0.2/diff.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/diff2html/3.4.16/diff2html.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="button-container">
+    <button id="exact-diff-button" style="display:none;">Exact diff</button>
+    <button id="reverse-button" style="display:none;">&#x2190;</button>
+  </div>
     <div class="container">
         <div class="options-space">
           <div class="top-section">

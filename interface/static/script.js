@@ -165,7 +165,8 @@ document.addEventListener('DOMContentLoaded', function() {
         sliderContainer.style.display = 'none';
         embeddingModelContainer.style.display = 'block';
         document.getElementById('checkbox1_embeddings').checked = true;
-      } else if (methodSelector.value === 'hybrid') {
+      } else if (selectedOption === 'hybrid') {
+   
         containerEmbeddings.style.display = 'block';
         containerLexical.style.display = 'block';
         sliderContainer.style.display = 'block';
@@ -186,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
       containerLexical.style.display = 'none';
       containerEmbeddings.style.display = 'block';
       embeddingModelContainer.display = 'block';
-    }
+    } 
 
     // display value while using slider
     slider.addEventListener('input', function() {
@@ -233,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
     cherchant des indices sur le développement des nouvelles molécules.
     `; 
 
-    let text3 =  `
+    let text3 =  `Hugo aime bien manger des pâtes.
     sovent que denier a Change, Rimer vueil du monde divers. Toz fu estez, or est yvers;
     Bon fu, or est d'autre maniere, Quar nule gent n'est més maniere De l'autrui porfit porchacier,
     Se son preu n'i cuide chacier. Chascuns devient oisel de proie: Nul ne vit més se il ne proie.
@@ -243,6 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
        sanz riens vendre. Il tolent, l'en ne lot tolt rien. Il sont fondé sus fort mesrien:
     `
     let text4 =  `
+    Hugo aime bien des fois manger le riz.
     veux rimer sur ce monde changeant. L'été est passé, maintenant c'est l'hiver; le monde était bon, 
     maintenant c'est différent, car personne ne sait plus travailler au bien d'autrui,
     s'il ne pense pas y trouver son profit. Chacun se fait oiseau de proie: nul ne vit plus que de proies.
@@ -256,11 +258,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Set default values to the textareas
-    /*
+    
     document.getElementById('text1').innerText = text3;
     document.getElementById('text2').innerText = text4;
-    */
-
+    
     document.getElementById('checkbox1_lexical').checked = true;
 
     document.getElementById('embeddingsModelContainer1').checked = true;
@@ -269,17 +270,72 @@ document.addEventListener('DOMContentLoaded', function() {
     text1_original = document.getElementById('text1').innerHTML;
     text2_original = document.getElementById('text2').innerHTML;
 
-    
-
-    
+    button_exact_diff = document.getElementById('exact-diff-button');
+    button_reverse = document.getElementById('reverse-button');
 
     // function for entity search.
     const search_entity = document.getElementById('search_entity');
     search_entity.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
+
+            text1_last = document.getElementById('text1').innerHTML;
+            text2_last = document.getElementById('text2').innerHTML;
+
             filterEntity();
+            show_buttons_filter(button_exact_diff, button_reverse);
+
+            button_reverse.addEventListener('click', function(event) {
+                document.getElementById('text1').innerHTML = text1_last;
+                document.getElementById('text2').innerHTML = text2_last;
+                button_exact_diff.style.display = 'none';
+                button_reverse.style.display = 'none';
+            });
         }
     });
+
+    button_exact_diff.addEventListener('click', function(event) {
+        text_1 = document.getElementById('text1');
+        text_2 = document.getElementById('text2');
+
+        function difflibFunc(text1, text2) {
+            let diffResult = diff.diffWords(text1.split(/\s+/), text2.split(/\s+/));
+            
+            let result1 = '';
+            let result2 = '';
+            
+            diffResult.forEach(part => {
+                // Green for additions, red for deletions, and grey for common parts
+                const color = part.added ? 'green' :
+                              part.removed ? 'red' : 'grey';
+                
+                const text = part.value.trim();
+                
+                if (part.removed) {
+                    result1 += `<span style="color: red">${text}</span> `;
+                } else if (part.added) {
+                    result2 += `<span style="color: green">${text}</span> `;
+                } else {
+                    result1 += `${text} `;
+                    result2 += `${text} `;
+                }
+            });
+        
+            // Assuming text1 and text2 are HTML elements or IDs of text areas
+            document.getElementById('text1').innerHTML = result1;
+            document.getElementById('text2').innerHTML = result2;
+        }
+
+        difflibFunc(text_1.innerText, text_2.innerText);
+        
+    });
+
+
+    
+    function show_buttons_filter() {
+
+        button_exact_diff.style.display = 'block';
+        button_reverse.style.display = 'block';
+    }
 
     // Function to perform search
     function filterEntity() {
