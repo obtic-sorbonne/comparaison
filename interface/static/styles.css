@@ -36,6 +36,7 @@ body {
     color: #fff; /* White text color */
     resize: none;
     margin-right: 5px; /* Space between text fields */
+    overflow: auto; /* Enable scrollbar when content exceeds height */
 
 }
 
@@ -178,7 +179,7 @@ button:active {
 
 .top-section {
     background-color: #171717;
-    height: 10%; /* Adjust height as needed */
+    height: 11.5vh; /* Adjust height as needed */
  
     border-bottom: 2px solid grey;
     border-right: 2px solid grey;
@@ -318,3 +319,109 @@ button:active {
 
     background-color: rgb(147, 131, 131); /* Transparent background on hover */
 }
+
+.diff-added {
+    background-color: #73d53a;
+}
+.diff-removed {
+    background-color: #e7536c;
+}
+
+#guideButton {
+    position: absolute;
+    font-size: 16px;
+    background-color: #75899f;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 5px;
+    
+    top: 1%;
+    right: 1%;
+}
+
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2f2f2f;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 60%;
+    height: 85%;
+    border-radius: 5%;
+   
+    overflow: auto;
+}
+
+.popup-message {
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+/* Styles for the overlay */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.popup-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 30px;
+    background: none;
+    border: none;
+}
+
+.popup-close:hover {
+    background-color: inherit !important; /* Inherit background color */
+    color: inherit !important; /* Inherit text color */
+    /* Remove other hover styles as needed */
+  }
+
+
+.popup-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center; /* Center align the popup title */
+
+}
+
+.popup-section {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.popup-section-title {
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: rgb(234, 105, 105);
+}
+
+.popup-message {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+#guideSelect {
+    position: absolute;
+    
+}
+

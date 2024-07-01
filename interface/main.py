@@ -28,8 +28,10 @@ def compare_texts():
     slidingValue = data['slidingValue']
     embedding_model = data['embedding'] 
     top_quantile =float(data['sliderConfidence'])
+    # precision label indicates if we use quantile or similarity score for precision selection
+    precision_label = data['precisionLabel']
     
-    df_comp = call(text1Text, text2Text, method, slidingValue, submethods, embedding_model, top_quantile)
+    df_comp = call(text1Text, text2Text, method, slidingValue, submethods, embedding_model, top_quantile, precision_label)
     _, _, _, sent_list_1, sent_list_2 = get_indices(df_comp, text1HTML, text2HTML)
 
     # colors for highlighting

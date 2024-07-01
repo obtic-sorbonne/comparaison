@@ -52,11 +52,12 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 # class to select most similar sentences in dataframe
 class SimFiltering:
 
-    def __init__(self, sim_matrix, chunks_1, chunks_2, top_quantile):
+    def __init__(self, sim_matrix, chunks_1, chunks_2, top_quantile, precision_label):
         self.sim_matrix = sim_matrix
         self.chunks_1 = chunks_1
         self.chunks_2 = chunks_2
         self.top_quantile = top_quantile
+        self.precision_label = precision_label
 
     # keeping sentences with similarity score above threshold and sorting them by sim score
     def get_comp_sentences(self, sim_df, sentences1, sentences2, threshold = 0):
@@ -74,12 +75,17 @@ class SimFiltering:
         return df_comp
 
 
-    # keeping sentences with sim score above certain quantile
-    def get_top_comp(self, df_comp, quantile):
-        val_quantile = df_comp['sim_score'].quantile(quantile)
-        df_comp_top = df_comp[df_comp['sim_score'] >= val_quantile]
+    # keeping sentences with sim score above certain quantile or sim score 
+    def get_top_comp(self, df_comp, value, precision_label):
+        if precision_label == 'selection_quantile':
+            val_top = df_comp['sim_score'].quantile(value)
+            df_comp_top = df_comp[df_comp['sim_score'] >= val_top]
+        elif precision_label == 'selection_sim_score':
+            df_comp_top = df_comp[df_comp['sim_score'] >= value]
+        else:
+            print('error - precision_label')
         return df_comp_top
-
+    
     # removing duplicates in comparison dataframe
     def filter_df_comp_top(self, df):
         result = df.sort_values(by = ['sent1', 'sim_score'], ascending=[True, False])
@@ -87,7 +93,6 @@ class SimFiltering:
         
         result = result.sort_values(by = ['sent2', 'sim_score'], ascending=[True, False])
         result = result.drop_duplicates(subset='sent2', keep='first')
-        
         
         result = result.sort_values(by = ['sim_score'], ascending = False)
         return result
@@ -98,7 +103,7 @@ class SimFiltering:
 
         sim_df = pd.DataFrame(self.sim_matrix)
         df_comp = self.get_comp_sentences(sim_df, self.chunks_1, self.chunks_2)
-        df_comp_top = self.get_top_comp(df_comp, self.top_quantile)
+        df_comp_top = self.get_top_comp(df_comp, self.top_quantile, self.precision_label)
         df_top_filt = self.filter_df_comp_top(df_comp_top)
 
         return df_top_filt
@@ -134,10 +139,11 @@ class Tokenizer:
 # class to get dataframe for lexical similarity
 class LexicalSim:
 
-    def __init__(self, chunks_1, chunks_2, top_quantile):
+    def __init__(self, chunks_1, chunks_2, top_quantile, precision_label):
         self.chunks_1 = chunks_1
         self.chunks_2 = chunks_2
         self.top_quantile = top_quantile
+        self.precision_label = precision_label
 
 
     # get similarity matrix with Jaccard
@@ -192,33 +198,34 @@ class LexicalSim:
     
         if method == "JACCARD":
             sim_matrix_jaccard = np.array(self.jaccard_similarity_matrix(self.chunks_1, self.chunks_2))
-            simfilt = SimFiltering(sim_matrix_jaccard, self.chunks_1, self.chunks_2, self.top_quantile)
+            simfilt = SimFiltering(sim_matrix_jaccard, self.chunks_1, self.chunks_2, self.top_quantile, self.precision_label)
             df_top_filt_jaccard = simfilt.return_filt_df()
             return df_top_filt_jaccard
         elif method == "LEVENSHTEIN":
             sim_matrix_lev = np.array(self.levenshtein_matrix(self.chunks_1, self.chunks_2))
-            simfilt = SimFiltering(sim_matrix_lev, self.chunks_1, self.chunks_2, self.top_quantile)
+            simfilt = SimFiltering(sim_matrix_lev, self.chunks_1, self.chunks_2, self.top_quantile, self.precision_label)
             df_top_filt_lev = simfilt.return_filt_df()
             return df_top_filt_lev
         elif method == "HAMMING":
             sim_matrix_hamming = np.array(self.hamming_normalized_distance(self.chunks_1, self.chunks_2))
-            simfilt = SimFiltering(sim_matrix_hamming, self.chunks_1, self.chunks_2, self.top_quantile)
+            simfilt = SimFiltering(sim_matrix_hamming, self.chunks_1, self.chunks_2, self.top_quantile, self.precision_label)
             df_top_filt_hamming = simfilt.return_filt_df()
             return df_top_filt_hamming
         elif method == "JARO-WINKLER":
             sim_matrix_jarowinkler = np.array(self.jaro_winkler_matrix(self.chunks_1, self.chunks_2))
-            simfilt = SimFiltering(sim_matrix_jarowinkler, self.chunks_1, self.chunks_2, self.top_quantile)
+            simfilt = SimFiltering(sim_matrix_jarowinkler, self.chunks_1, self.chunks_2, self.top_quantile, self.precision_label)
             df_top_filt_jarowinkler= simfilt.return_filt_df()
             return df_top_filt_jarowinkler
         
 
 # class to get similarity dataframe with embeddings
 class EmbeddingsSim:
-    def __init__(self, chunks_1, chunks_2, embedding_model, top_quantile):
+    def __init__(self, chunks_1, chunks_2, embedding_model, top_quantile, precision_label):
         self.chunks_1 = chunks_1
         self.chunks_2 = chunks_2
         self.embedding_model = embedding_model
         self.top_quantile = top_quantile
+        self.precision_label = precision_label
 
     # using tokenizer to convert chunks to embeddings using transformers
     def embed_chunks_transformers(self, sentences, tokenizer, model):
@@ -282,18 +289,18 @@ class EmbeddingsSim:
         
         if submethod == "COSINE":
             sim_matrix_cos = np.array(util.pytorch_cos_sim(embeddings1, embeddings2))
-            simfilt = SimFiltering(sim_matrix_cos, self.chunks_1, self.chunks_2, self.top_quantile)
+            simfilt = SimFiltering(sim_matrix_cos, self.chunks_1, self.chunks_2, self.top_quantile, self.precision_label)
             df_top_filt_cos = simfilt.return_filt_df()
             return df_top_filt_cos
         elif submethod == "EUCLIDEAN":
             dist_matrix_euclid = pairwise_distances(embeddings1, embeddings2, metric = 'euclidean')
             sim_matrix_euclid = self.dist_to_sim(dist_matrix_euclid)
-            simfilt = SimFiltering(sim_matrix_euclid, self.chunks_1, self.chunks_2, self.top_quantile)
+            simfilt = SimFiltering(sim_matrix_euclid, self.chunks_1, self.chunks_2, self.top_quantile, self.precision_label)
             df_top_filt_euclid = simfilt.return_filt_df()
             return df_top_filt_euclid
         elif submethod == "DOT":
             sim_matrix_dot = self.get_inner_product_matrix(embeddings1, embeddings2)
-            simfilt = SimFiltering(sim_matrix_dot, self.chunks_1, self.chunks_2, self.top_quantile)
+            simfilt = SimFiltering(sim_matrix_dot, self.chunks_1, self.chunks_2, self.top_quantile, self.precision_label)
             df_top_filt_dot = simfilt.return_filt_df()
             return df_top_filt_dot
         else:
@@ -301,15 +308,16 @@ class EmbeddingsSim:
 
 # class to get similarity dataframe with hybrid method
 class Hybrid:
-    def __init__(self, chunks_1, chunks_2, submethods, lex_coef, embedding_model, top_quantile):
+    def __init__(self, chunks_1, chunks_2, submethods, lex_coef, embedding_model, top_quantile, precision_label):
         self.chunks_1 = chunks_1
         self.chunks_2 = chunks_2
         self.submethods = submethods
         self.lex_coef = lex_coef
+        self.precision_label = precision_label
 
         self.top_quantile = top_quantile
-        self.lexsim = LexicalSim(self.chunks_1, self.chunks_2, top_quantile)
-        self.embsim = EmbeddingsSim(self.chunks_1, self.chunks_2, embedding_model, top_quantile)
+        self.lexsim = LexicalSim(self.chunks_1, self.chunks_2, top_quantile, precision_label)
+        self.embsim = EmbeddingsSim(self.chunks_1, self.chunks_2, embedding_model, top_quantile, precision_label)
 
         self.embedding_model = embedding_model
     
@@ -353,13 +361,13 @@ class Hybrid:
     # get sim matrix and most similar sentences
     def return_comp_df(self):
         weighted_matrix = self.get_hybrid_sim_matrix()
-        simfilt = SimFiltering(weighted_matrix, self.chunks_1, self.chunks_2, self.top_quantile)
+        simfilt = SimFiltering(weighted_matrix, self.chunks_1, self.chunks_2, self.top_quantile, self.precision_label)
         df_top_filt_weighted = simfilt.return_filt_df()
         return df_top_filt_weighted
         
 
 # main function executing python
-def call(text1, text2, method,slidingValue,  submethods, embedding_model, top_quantile):
+def call(text1, text2, method,slidingValue,  submethods, embedding_model, top_quantile, precision_label):
 
     # Getting chunks
     tokenizer = Tokenizer(text1, text2)
@@ -372,15 +380,15 @@ def call(text1, text2, method,slidingValue,  submethods, embedding_model, top_qu
     submethod = submethods[0]
 
     if method == "LEXICAL":
-        lexsim = LexicalSim(chunks_1, chunks_2, top_quantile)
+        lexsim = LexicalSim(chunks_1, chunks_2, top_quantile, precision_label)
         df_comp = lexsim.return_comp_df(submethod)
 
     elif method == "EMBEDDINGS":
-        embsim = EmbeddingsSim(chunks_1, chunks_2, embedding_model, top_quantile)
+        embsim = EmbeddingsSim(chunks_1, chunks_2, embedding_model, top_quantile, precision_label)
         df_comp = embsim.return_comp_df(submethod)
 
     elif method == "HYBRID":
-        hybridsim = Hybrid(chunks_1, chunks_2, submethods, slidingValue, embedding_model, top_quantile)
+        hybridsim = Hybrid(chunks_1, chunks_2, submethods, slidingValue, embedding_model, top_quantile, precision_label)
         df_comp = hybridsim.return_comp_df()
     else:
         print("Error method", method)

@@ -1,11 +1,12 @@
 
-
-
 let text1_original;
 let text2_original;
 
 let text1Store;
 let text2Store;
+
+let text1DiffStore;
+let text2DiffStore;
 
 document.getElementById('submitButton').addEventListener('click', function() {
 
@@ -26,9 +27,6 @@ document.getElementById('submitButton').addEventListener('click', function() {
     // removing highlighting
     var text1_element = document.getElementById('text1');
     var text2_element = document.getElementById('text2');
-
-    
-
 
     var text1Text = document.getElementById('text1').innerText;
     var text2Text = document.getElementById('text2').innerText;
@@ -92,6 +90,9 @@ document.getElementById('submitButton').addEventListener('click', function() {
     var slidingValue = valueDisplay.textContent;   
     const sliderConfidence = document.getElementById('sliderConfidence').value;
 
+    var similarityMethod2 = document.getElementById('similarityMethod2');
+    var precisionLabel = similarityMethod2.value;
+
     // variables used for Python code
     var data = {
         text1Text: text1Text,
@@ -102,7 +103,8 @@ document.getElementById('submitButton').addEventListener('click', function() {
         submethods: submethods,
         slidingValue: slidingValue,
         embedding: checkedValueEmbedding,
-        sliderConfidence: sliderConfidence
+        sliderConfidence: sliderConfidence,
+        precisionLabel: precisionLabel
     };
 
     // sending data for Python processing
@@ -140,6 +142,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var radiosLexical = containerLexical.querySelectorAll('input[name="methods_lexical"]');
     var radiosSemantic = containerEmbeddings.querySelectorAll('input[name="methods_embeddings"]');
+
+
+    var precisionSelector = document.getElementById('similarityMethod2');
+    var slider_precision = document.getElementById('slider_precision');
+    precisionSelector.addEventListener('change', function() {
+        if (precisionSelector.value === 'selection_quantile'){
+            slider_precision.textContent = 'Top% Quantile';
+        } else if (precisionSelector.value === 'selection_sim_score'){
+            slider_precision.textContent = 'Similarity score';
+        }
+    });
     
     // function called when we choose the similarity method with select box
     methodSelector.addEventListener('change', function() {
@@ -234,17 +247,17 @@ document.addEventListener('DOMContentLoaded', function() {
     cherchant des indices sur le développement des nouvelles molécules.
     `; 
 
-    let text3 =  `Hugo aime bien manger des pâtes.
+    let text3 =  `Dans un effort pour améliorer l'expérience utilisateur globale, Hugo a décidé de mettre en œuvre plusieurs nouvelles fonctionnalités, y compris un tableau de bord personnalisable, des notifications en temps réel et des mesures de sécurité renforcées.
     sovent que denier a Change, Rimer vueil du monde divers. Toz fu estez, or est yvers;
     Bon fu, or est d'autre maniere, Quar nule gent n'est més maniere De l'autrui porfit porchacier,
     Se son preu n'i cuide chacier. Chascuns devient oisel de proie: Nul ne vit més se il ne proie.
     Por ce dirai l'estat du monde, Qui de toz biens se vuide et monde. Relegieus premierement Deussent vivre saintement,
      Ce croi, selonc m'entencion. Si a double religion: Li un sont moine blanc et noir Qui maint biau lieu et maint manoir
       Ont et mainte richece assise, Qui toz sont sers a Covoitise. Toz jors vuelent sanz doner prendre, Toz jors achatent
-       sanz riens vendre. Il tolent, l'en ne lot tolt rien. Il sont fondé sus fort mesrien:
+       sanz riens vendre. Il tolent, l'en ne lot tolt rien. Il sont fondé sus fort mesrien.
+       Hugo aime les animaux.
     `
-    let text4 =  `
-    Hugo aime bien des fois manger le riz.
+    let text4 =  `Dans une tentative d'améliorer l'expérience utilisateur globale, Hugo a choisi d'introduire plusieurs nouvelles fonctionnalités, telles qu'un tableau de bord personnalisable, des notifications instantanées et des protocoles de sécurité améliorés.
     veux rimer sur ce monde changeant. L'été est passé, maintenant c'est l'hiver; le monde était bon, 
     maintenant c'est différent, car personne ne sait plus travailler au bien d'autrui,
     s'il ne pense pas y trouver son profit. Chacun se fait oiseau de proie: nul ne vit plus que de proies.
@@ -253,7 +266,8 @@ document.addEventListener('DOMContentLoaded', function() {
     Or, ils sont de deux sortes: les uns sont des moines blancs ou noirs , qui possèdent maintes
     belles résidences et maintes richesses solides. Ils sont tous esclaves de Cupidité.
     Sans cesse ils veulent prendre sans jamais donner, sans cesse ils achètent sans jamais rien vendre.
-    Ils prennent, et on ne leur prend
+    Ils prennent, et on ne leur prend.
+    Hugo aime les animaux.
     `
 
 
@@ -263,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('text2').innerText = text4;
     
     document.getElementById('checkbox1_lexical').checked = true;
-
     document.getElementById('embeddingsModelContainer1').checked = true;
 
 
@@ -273,6 +286,32 @@ document.addEventListener('DOMContentLoaded', function() {
     button_exact_diff = document.getElementById('exact-diff-button');
     button_reverse = document.getElementById('reverse-button');
 
+    button_guide = document.getElementById('guideButton');
+
+
+
+
+
+    // Close the popup when clicking outside of it
+    document.getElementById('overlay').addEventListener('click', function(event) {
+        if (event.target === this) { // Clicked on the overlay itself, not on the popup
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('popup').style.display = 'none';
+        }
+    });
+
+    // closing button for guide
+    document.getElementById('popupCloseBtn').addEventListener('click', function(event) {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('popup').style.display = 'none';
+    });
+
+    // guide button
+    button_guide.addEventListener('click', function(event) {
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('popup').style.display = 'block';
+    })
+    
     // function for entity search.
     const search_entity = document.getElementById('search_entity');
     search_entity.addEventListener('keypress', function(event) {
@@ -282,8 +321,10 @@ document.addEventListener('DOMContentLoaded', function() {
             text2_last = document.getElementById('text2').innerHTML;
 
             filterEntity();
+           
             show_buttons_filter(button_exact_diff, button_reverse);
 
+            // button to go back before filtering
             button_reverse.addEventListener('click', function(event) {
                 document.getElementById('text1').innerHTML = text1_last;
                 document.getElementById('text2').innerHTML = text2_last;
@@ -291,45 +332,46 @@ document.addEventListener('DOMContentLoaded', function() {
                 button_reverse.style.display = 'none';
             });
         }
-    });
+        });
 
-    button_exact_diff.addEventListener('click', function(event) {
-        text_1 = document.getElementById('text1');
-        text_2 = document.getElementById('text2');
+        // button to show exact differences for entities search
+        button_exact_diff.addEventListener('click', function(event) {
 
-        function difflibFunc(text1, text2) {
-            let diffResult = diff.diffWords(text1.split(/\s+/), text2.split(/\s+/));
-            
-            let result1 = '';
-            let result2 = '';
-            
-            diffResult.forEach(part => {
-                // Green for additions, red for deletions, and grey for common parts
-                const color = part.added ? 'green' :
-                              part.removed ? 'red' : 'grey';
-                
-                const text = part.value.trim();
-                
-                if (part.removed) {
-                    result1 += `<span style="color: red">${text}</span> `;
-                } else if (part.added) {
-                    result2 += `<span style="color: green">${text}</span> `;
-                } else {
-                    result1 += `${text} `;
-                    result2 += `${text} `;
-                }
-            });
-        
-            // Assuming text1 and text2 are HTML elements or IDs of text areas
-            document.getElementById('text1').innerHTML = result1;
-            document.getElementById('text2').innerHTML = result2;
-        }
+            const text_1 = document.getElementById('text1');
+            const text_2 = document.getElementById('text2');
 
-        difflibFunc(text_1.innerText, text_2.innerText);
-        
-    });
+            const oldText = text_1.innerText;
+            const newText = text_2.innerText;
 
+            // change background color based on insertion or deletion between two versions
+            try {
+                const diff = Diff.diffWordsWithSpace(oldText, newText);
 
+                let oldTextHtml = '';
+                let newTextHtml = '';
+
+                diff.forEach(part => {
+                    if (part.added) {
+                        newTextHtml += `<span class="diff-added">${part.value}</span>`;
+                    } else if (part.removed) {
+                        oldTextHtml += `<span class="diff-removed">${part.value}</span>`;
+                    } else {
+                        oldTextHtml += part.value;
+                        newTextHtml += part.value;
+                    }
+                });
+
+                text_1.innerHTML = oldTextHtml;
+                text_2.innerHTML = newTextHtml;
+
+            } catch (error) {
+                alert('An error occurred while calculating the differences: ' + error.message);
+                // Optionally, provide a fallback diff functionality or display an error message
+            }
+
+    
+
+    }); 
     
     function show_buttons_filter() {
 
@@ -380,6 +422,110 @@ document.addEventListener('DOMContentLoaded', function() {
     textArea1.addEventListener('paste', handlePaste);
     const textArea2 = document.getElementById('text2');
     textArea2.addEventListener('paste', handlePaste);
+
+
+    var languageGuideSelect = document.getElementById('guideSelect');
+    var popupTitle = document.getElementById('popup-title');
+    var popupMessage = document.getElementById('popup-message');
+    var popup_section_title_1 = document.getElementById('popup_section_title_1');
+    var subtitle1 = document.getElementById('subtitle1');
+    var subtitle2 = document.getElementById('subtitle2');
+    var subtitle1Content = document.getElementById('subtitle1Content');
+    var subtitle2Content = document.getElementById('subtitle2Content');
+    var popup_section_title_2 = document.getElementById('popup_section_title_2');
+    var popup_section_text_2 = document.getElementById('popup_section_text_2');
+    var popup_section_title_3 = document.getElementById('popup_section_title_3');
+    var popup_section_text_3 = document.getElementById('popup_section_text_3');
+    var hybrid_method_1 = document.getElementById('hybrid_method_1');
+    var hybrid_method_text_1 = document.getElementById('hybrid_method_text_1');
+    var entities_search_1 = document.getElementById('entities_search_1');
+    var entities_search_text_1 = document.getElementById('entities_search_text_1');
+
+
+    languageGuideSelect.addEventListener('change', function() {
+        var selectedLanguage = languageGuideSelect.value;
+        switch (selectedLanguage) {
+            case "guide_french":
+                popupTitle.textContent = "Guide pour comparaison de textes";
+                popupMessage.textContent = `Cet outil permet de comparer deux textes en utilisant plusieurs méthodes de similarité : lexicale, avec des embeddings, ou les deux (hybride).
+Deux phrases similaires sont surlignées dans la même couleur.
+Pour chaque méthode, vous pouvez utiliser plusieurs métriques pour mesurer la similarité.`;
+                popup_section_title_1.textContent = `Choisir des phrases similaires`;
+                subtitle1.textContent = 'Top% Quartile';
+                subtitle2.textContent = 'Avec score de similarité';
+                subtitle1Content.textContent = `Vous devez ajuster le curseur pour définir ce qu'est le quantile : le seuil en dessous duquel un certain pourcentages des phrases les plus
+                similaires se situe.
+                \nSi le quantile est de 0.9, le top 10 % des phrases les plus similaires sont appariées. Si le quantile est de 0.1, ce sont les Top 90 % plus similaires.`;
+                subtitle2Content.textContent = `Vous devez ajuster le curseur pour définir le score de similarité minimal. Les paires de phrases auront des scores de similarité
+                supérieurs à ce score.\n
+                Si le score est de 0.9, les paires de phrases auront un score de similarité supérieur à 0.9.`
+                popup_section_title_2.textContent = 'Similarité lexicale';
+                popup_section_text_2.textContent = `La similarité lexicale évalue la similitude entre deux morceaux de texte en analysant
+                leurs mots et leur agencement. Elle se base sur l'utilisation précise des mots dans le texte,
+                comparant ainsi les structures textuelles de manière superficielle.`;
+                popup_section_title_3.textContent = 'Similarité avec les embeddings';
+                popup_section_text_3.textContent = `L'utilisation des embeddings prend également en compte la similarité
+                sémantique. Elle repose sur les concepts sous-jacents et la compréhension contextuelle du langage, 
+                plutôt que sur la ressemblance structurelle.`
+                hybrid_method_1.textContent = 'Méthode hybride';
+                hybrid_method_text_1.textContent = `La méthode hybride prend en compte à la fois la méthode lexicale 
+                et celle utilisant les embeddings.\n Utilisez le curseur pour choisir quelle méthode vous souhaitez utiliser
+                le plus. Une valeur de 0 utilise uniquement les embeddings, une valeur de 1 utilise uniquement la méthode lexicale,
+                et une valeur de  0.5 utilise les deux méthodes de manière égale.`;
+                entities_search_1.textContent = "Recherche d'entités";
+                entities_search_text_1.textContent = `
+                Vous pouvez filtrer et sélectionner des phrases dans les deux textes contenant un mot spécifique comme un nom d'entité.\n
+                Le bouton "Exact diff" affiche les différences exactes entre les phrases. En rouge sont les suppressions et en vert sont les ajouts.
+                `;
+
+
+                break;
+
+
+            case "guide_english":
+                popupTitle.textContent = "Guide for Text comparison";
+                popupMessage.textContent = `This tool allows to compare two texts based on several similarity methods: lexical, with embeddings, or both (hybrid).
+            Two similar sentences are highlighted in the same color.
+            For each method, you can use several metrics to measure similarity.`;
+            popup_section_title_1.textContent.textContent = 'Choosing similar sentences';
+            subtitle1.textContent = 'Top% Quantile';
+            subtitle2.textContent = 'With similarity score';
+            subtitle2Content.textContent = `You have to adjust the slider to define what is the minimal similarity score.All paired sentences will have similarity scores
+                superior to this score.\n
+                If the score is 0.9, all paired sentences have a similarity score greater than 0.9.`;
+            subtitle1Content.textContent = `You have to adjust the slider to define what the quantile is: the threshold below which a certain percentage
+                of the most similar sentences falls.\n
+                If the quantile is 0.9, the top 10% most similar sentences are paired. If the quantile is 0.1, it's the top 90%.
+            `
+            popup_section_title_2.textContent = 'Lexical similarity';
+            popup_section_text_2.textContent  = `Lexical similarity measures how similar two pieces of text are based on their words and their arrangement.
+              It relies on the exact words used in the text, comparing text at the surface level.`;
+            popup_section_title_3.textContent = 'Similarity with embeddings';
+            popup_section_text_3.textContent = `Using embeddings takes also into account semantic similarity. It is based on the underlying concepts and contextual
+                understanding of language instead of the structural ressemblance.`;
+            hybrid_method_1.textContent = 'Hybrid method';
+            hybrid_method_text_1.textContent = `
+            The hybrid method takes into account both the lexical method and the one with embeddings.\n
+            Use the slider to choose what method you want to use the most. 0 value means you only use embeddings, 1 means you only use
+            the lexical method, and 0.5 means you use both methods equally.`;
+            entities_search_1.textContent = 'Entities search'
+            entities_search_text_1.textContent = `You can filter and select sentences in both texts containing a specific word such as an entity name.\n
+          The button "Exact diff" will show the exact differences between sentences. In red are deletions and in green are
+          additions.`;
+
+
+            default:
+                break;
+        }
+    })
+
+    switch (selectedLanguage) {
+        case "Français":
+            popupTitle.textContent = "Guide pour comparaison de textes";
+            break;
+        default:
+            break;
+    }
 
     
 });
