@@ -14,10 +14,6 @@ import torch
 from tqdm import tqdm
 
 
-import nltk
-from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk.corpus import stopwords
-from nltk.corpus import wordnet as wn
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -27,7 +23,6 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 import tkinter as tk
-import networkx as nx
 import textdistance
 from sentence_transformers import SentenceTransformer, util
 
