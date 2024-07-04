@@ -8,7 +8,7 @@ from code_folder.code import call
 from code_folder.code import get_indices
 from code_folder.code import replace_sentences_html
 
-app = Flask(__name__)
+app = Flask("main")
 CORS(app)
 
 # redirects to main page HTML
