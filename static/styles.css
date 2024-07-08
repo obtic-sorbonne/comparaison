@@ -27,7 +27,7 @@ body {
 
 .textfield {
     flex: 1;
-    height: 70vh;
+    height: 65vh;
     padding: 10px;
     border: 2px solid #8b8888; /* Lighter border color */
     border-radius: 10px;
@@ -270,19 +270,11 @@ button:active {
     margin-top: 5%;
 }
 
-.button-container {
-    display: flex; /* Use flexbox for layout */
-    align-items: center; /* Center items vertically */
-    margin-left: 21%;
-    position: relative;
-}
-
 #exact-diff-button{
 
     padding: 10px;
     width: 100px;
-    position: relative;
-    top: 20px;
+    position: absolute;
     /* Additional styling */
     background-color: #f0f0f0; /* Light gray background */
     border: 1px solid #ccc; /* Gray border */
@@ -293,16 +285,20 @@ button:active {
     transition: background-color 0.3s ease; /* Smooth transition */
     border-radius: 5px;
 
+    margin-left: 24%;
+    top: 1%;
     
 }
 
 #reverse-button {
-    margin-left: 5px;
+    
+    top: 1%;
+    margin-left: 21%;
+    
     height: 40px;
     width: 40px;
 
-    position:relative;
-    top: 20px;
+    position:absolute;
     background-color: rgb(155, 139, 139);
     border-radius: 5px;
 
@@ -425,3 +421,28 @@ button:active {
     
 }
 
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.importButton {
+    padding: 5px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #4e555e;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.importButton:hover {
+    background-color: #7894b3;
+}
+
+.importButton:active {
+    background-color: #7894b3;
+}

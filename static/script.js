@@ -1,4 +1,6 @@
 
+
+
 let text1_original;
 let text2_original;
 
@@ -52,7 +54,6 @@ document.getElementById('submitButton').addEventListener('click', function() {
     // slider value
     const valueDisplay = document.getElementById('sliderValue');
 
-    
     var checkedValueLexical = null;
     var checkedValueSemantic= null;
     var checkedValueEmbedding = null;
@@ -127,6 +128,10 @@ document.getElementById('submitButton').addEventListener('click', function() {
     .catch(error => {
         console.error('Error calling Python:', error);
     });
+
+    localStorage.setItem('savedText1', text1.innerText);
+    localStorage.setItem('savedText2', text2.innerText);
+
 });
 
 
@@ -256,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
       Ont et mainte richece assise, Qui toz sont sers a Covoitise. Toz jors vuelent sanz doner prendre, Toz jors achatent
        sanz riens vendre. Il tolent, l'en ne lot tolt rien. Il sont fondé sus fort mesrien.
        Hugo aime les animaux.
-    `
+    `;
     let text4 =  `Dans une tentative d'améliorer l'expérience utilisateur globale, Hugo a choisi d'introduire plusieurs nouvelles fonctionnalités, telles qu'un tableau de bord personnalisable, des notifications instantanées et des protocoles de sécurité améliorés.
     veux rimer sur ce monde changeant. L'été est passé, maintenant c'est l'hiver; le monde était bon, 
     maintenant c'est différent, car personne ne sait plus travailler au bien d'autrui,
@@ -268,13 +273,25 @@ document.addEventListener('DOMContentLoaded', function() {
     Sans cesse ils veulent prendre sans jamais donner, sans cesse ils achètent sans jamais rien vendre.
     Ils prennent, et on ne leur prend.
     Hugo aime les animaux.
-    `
-
+    `;
 
     // Set default values to the textareas
     
+
+    let text1 = document.getElementById('text1');
+    let text2 = document.getElementById('text2');
+
     document.getElementById('text1').innerText = text3;
     document.getElementById('text2').innerText = text4;
+
+    
+    if (localStorage.getItem('savedText1')) {
+        text1.innerText = localStorage.getItem('savedText1');
+    }
+    if (localStorage.getItem('savedText2')) {
+        text2.innerText = localStorage.getItem('savedText2');
+    }
+    
     
     document.getElementById('checkbox1_lexical').checked = true;
     document.getElementById('embeddingsModelContainer1').checked = true;
@@ -288,8 +305,119 @@ document.addEventListener('DOMContentLoaded', function() {
 
     button_guide = document.getElementById('guideButton');
 
+    
+    importButton1 = document.getElementById('importButton1');
+    importButton2 = document.getElementById('importButton2');
 
 
+    importButton1.addEventListener('click', function() {
+        const fileInput = document.createElement('input');
+        fileInput.setAttribute('type', 'file');
+        fileInput.setAttribute('accept', ['.pdf', '.txt']); // Only accept PDF files
+        fileInput.classList.add('fileInput');
+
+
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                var filename = file.name;
+                var fileExtension = filename.split('.').pop().toLowerCase();
+
+                if (fileExtension === 'txt') {
+
+                    var reader = new FileReader();
+
+                    reader.onload = function(event) {
+                        var contents = event.target.result;
+                        text1.textContent = contents;
+                    };
+                    reader.readAsText(file);
+                    localStorage.setItem('savedText1', text1.textContent);
+
+
+                } else if (fileExtension === 'pdf') {
+
+                    const reader = new FileReader();
+                reader.onload = function(event) {
+                    const typedArray = new Uint8Array(event.target.result);
+                    // Using PDF.js to extract text
+                    pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
+                        pdf.getPage(1).then(function(page) { // Fetching first page
+                            page.getTextContent().then(function(textContent) {
+                                let text = '';
+                                textContent.items.forEach(function(item) {
+                                    text += item.str + ' ';
+                                });
+                                text1.textContent = text;
+                                localStorage.setItem('savedText1', text1.textContent);
+
+                            });
+                        });
+                    });
+                };
+                reader.readAsArrayBuffer(file);
+                }
+            }
+        });
+
+        // Trigger the file input dialog
+        fileInput.click();
+});
+
+importButton2.addEventListener('click', function() {
+    const fileInput = document.createElement('input');
+    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute('accept', ['.pdf', '.txt']); // Only accept PDF files
+    fileInput.classList.add('fileInput');
+
+
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            var filename = file.name;
+            var fileExtension = filename.split('.').pop().toLowerCase();
+
+            if (fileExtension === 'txt') {
+
+                var reader = new FileReader();
+
+                reader.onload = function(event) {
+                    var contents = event.target.result;
+                    text2.textContent = contents;
+                };
+                reader.readAsText(file);
+                localStorage.setItem('savedText2', text2.textContent);
+
+
+            } else if (fileExtension === 'pdf') {
+
+                const reader = new FileReader();
+            reader.onload = function(event) {
+                const typedArray = new Uint8Array(event.target.result);
+                // Using PDF.js to extract text
+                pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
+                    pdf.getPage(1).then(function(page) { // Fetching first page
+                        page.getTextContent().then(function(textContent) {
+                            let text = '';
+                            textContent.items.forEach(function(item) {
+                                text += item.str + ' ';
+                            });
+                            text2.textContent = text;
+                            localStorage.setItem('savedText2', text2.textContent);
+
+
+                        });
+                    });
+                });
+            };
+            reader.readAsArrayBuffer(file);
+            }
+        }
+    });
+
+    // Trigger the file input dialog
+    fileInput.click();
+});
 
 
     // Close the popup when clicking outside of it
@@ -316,7 +444,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const search_entity = document.getElementById('search_entity');
     search_entity.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-
             text1_last = document.getElementById('text1').innerHTML;
             text2_last = document.getElementById('text2').innerHTML;
 
@@ -368,8 +495,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('An error occurred while calculating the differences: ' + error.message);
                 // Optionally, provide a fallback diff functionality or display an error message
             }
-
-    
 
     }); 
     
@@ -475,8 +600,10 @@ Pour chaque méthode, vous pouvez utiliser plusieurs métriques pour mesurer la 
                 entities_search_1.textContent = "Recherche d'entités";
                 entities_search_text_1.textContent = `
                 Vous pouvez filtrer et sélectionner des phrases dans les deux textes contenant un mot spécifique comme un nom d'entité.\n
-                Le bouton "Exact diff" affiche les différences exactes entre les phrases. En rouge sont les suppressions et en vert sont les ajouts.
                 `;
+
+                exact_diff_1.textContent = "Afficher les différences exactes";
+                exact_diff_text_1.textContent = `Dans le mode recherche d'entités, le bouton "Exact diff" affiche les différences exactes entre les phrases. En rouge sont les suppressions et en vert sont les ajouts.`;
 
 
                 break;
@@ -510,8 +637,11 @@ Pour chaque méthode, vous pouvez utiliser plusieurs métriques pour mesurer la 
             the lexical method, and 0.5 means you use both methods equally.`;
             entities_search_1.textContent = 'Entities search'
             entities_search_text_1.textContent = `You can filter and select sentences in both texts containing a specific word such as an entity name.\n
-          The button "Exact diff" will show the exact differences between sentences. In red are deletions and in green are
-          additions.`;
+          `;
+
+          exact_diff_1.textContent = "Show exact differences";
+          exact_diff_text_1.textContent = `In entity search mode, the "Exact diff" button displays the exact differences between the sentences. Deletions are shown in red, and additions are shown in green.`;
+          
 
 
             default:

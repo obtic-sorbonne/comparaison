@@ -10,7 +10,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/diff2html/3.4.16/diff2html.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsdiff@3.8.0/dist/diff.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/5.2.0/diff.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/5.2.0/diff.min.js" integrity="sha512-lKVITyoJW3nWzWcWWfcR2CibmobDzrWNWvSF8iFM5NaNTSb0vQ/TGZVR/MGc+LT8isfIP5mxFJB9j31fAIlXsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module" src="https://npmcdn.com/pdfjs-dist/build/pdf.js"></script>
+    <script type = "module" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 
 
     <link rel="stylesheet" href="styles.css">
@@ -96,6 +98,12 @@
                   </div>  
             </div>
         </div>
+        <div class="button-container">
+          <button class="importButton" id="importButton1">Import Text 1</button>
+          <button class="importButton" id="importButton2">Import Text 2</button>
+      </div>
+      
+
         <div class="text-container">
             <div class="left-column"></div>
             <div id="text1" class="textfield" placeholder="Text 1" contenteditable="true"></div>
@@ -163,9 +171,14 @@
         <div class="popup-section-title" id='entities_search_1'>Recherche d'entités</div>
         <div class="popup-section-text" id='entities_search_text_1'>
           Vous pouvez filtrer et sélectionner des phrases dans les deux textes contenant un mot spécifique comme un nom d'entité.<br>
-          Le bouton "Exact diff" affiche les différences exactes entre les phrases. En rouge sont les suppressions et en vert sont les ajouts.
         </div>
-    </div>
+      </div>
+      <div class="popup-section">
+        <div class="popup-section-title" id='exact_diff_1'>Afficher les différences exactes</div>
+        <div class="popup-section-text" id='exact_diff_text_1'>
+          Dans le mode recherche d'entités, le bouton "Exact diff" affiche les différences exactes entre les phrases. En rouge sont les suppressions et en vert sont les ajouts.
+        </div>
+      </div>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
