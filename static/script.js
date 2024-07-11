@@ -285,12 +285,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('text2').innerText = text4;
 
     
+    /*
     if (localStorage.getItem('savedText1')) {
         text1.innerText = localStorage.getItem('savedText1');
     }
     if (localStorage.getItem('savedText2')) {
         text2.innerText = localStorage.getItem('savedText2');
     }
+    */
     
     
     document.getElementById('checkbox1_lexical').checked = true;
