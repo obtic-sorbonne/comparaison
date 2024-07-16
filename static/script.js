@@ -10,6 +10,10 @@ let text2Store;
 let text1DiffStore;
 let text2DiffStore;
 
+let pairedSentences1;
+let pairedSentences2;
+let pairedIndex = 0;
+
 document.getElementById('submitButton').addEventListener('click', function() {
 
     // upadting HTML format with highlighting
@@ -94,6 +98,9 @@ document.getElementById('submitButton').addEventListener('click', function() {
     var similarityMethod2 = document.getElementById('similarityMethod2');
     var precisionLabel = similarityMethod2.value;
 
+    var textProcess = document.getElementById('text-processing-select');
+    var ngramsInput = document.getElementById('ngrams-input');
+
     // variables used for Python code
     var data = {
         text1Text: text1Text,
@@ -105,7 +112,9 @@ document.getElementById('submitButton').addEventListener('click', function() {
         slidingValue: slidingValue,
         embedding: checkedValueEmbedding,
         sliderConfidence: sliderConfidence,
-        precisionLabel: precisionLabel
+        precisionLabel: precisionLabel,
+        textProcess: textProcess.value,
+        ngramsInput: ngramsInput.value
     };
 
     // sending data for Python processing
@@ -123,6 +132,45 @@ document.getElementById('submitButton').addEventListener('click', function() {
         button.textContent = "Compare";
                 
         highlight(data);
+
+
+        // dealing with cursor sentences
+        sent_list_1 = data['sent_list_1'];
+        sent_list_2 = data['sent_list_2'];
+
+        pairedSentences1 = sent_list_1;
+        pairedSentences2 = sent_list_2;
+
+
+
+        findNextButton = document.getElementById('findNextButton');
+        findNextButton.addEventListener('click', function() {
+
+            console.log(pairedSentences1);
+        
+            text1 = document.getElementById('text1');
+            text2 = document.getElementById('text2');
+            
+            function scrollToSubstring(textid, substring) {
+                textField = document.getElementById(textid);
+                innerText = textField.innerText.replace(/\n/g, '\\n');
+
+                var index = innerText.indexOf(substring);
+                if (index !== -1) {
+                    textField.scrollTop = textField.scrollHeight * (index / innerText.length);
+                }
+            }
+
+            scrollToSubstring("text1", pairedSentences1[pairedIndex]);
+            scrollToSubstring("text2", pairedSentences2[pairedIndex]);
+
+
+            pairedIndex = pairedIndex + 1;
+            if (pairedIndex === pairedSentences1.length){
+                pairedIndex = 0;
+            }
+
+        });
         
     })
     .catch(error => {
@@ -215,6 +263,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const sliderConfidence = document.getElementById('sliderConfidence');
       const sliderValueDisplay = document.getElementById('sliderValueConfidence');
+      
+      sliderValueDisplay.textContent = 0.7;
 
       // display value while using slider confidencess
       sliderConfidence.addEventListener('input', function() {
@@ -285,15 +335,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('text2').innerText = text4;
 
     
-    /*
     if (localStorage.getItem('savedText1')) {
         text1.innerText = localStorage.getItem('savedText1');
     }
     if (localStorage.getItem('savedText2')) {
         text2.innerText = localStorage.getItem('savedText2');
     }
-    */
-    
     
     document.getElementById('checkbox1_lexical').checked = true;
     document.getElementById('embeddingsModelContainer1').checked = true;
@@ -307,18 +354,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     button_guide = document.getElementById('guideButton');
 
-    
     importButton1 = document.getElementById('importButton1');
     importButton2 = document.getElementById('importButton2');
 
+    var ngramsContainer = document.getElementById('ngrams-container');
+    ngramsContainer.style.display = 'block';
+
+
+    document.getElementById('text-processing-select').addEventListener('change', function() {
+        var selectedValue = this.value;
+        var ngramsContainer = document.getElementById('ngrams-container');
+
+        if (selectedValue === 'NGRAMS') {
+            ngramsContainer.style.display = 'block';
+        } else {
+            ngramsContainer.style.display = 'none';
+        }
+    });
 
     importButton1.addEventListener('click', function() {
+        
         const fileInput = document.createElement('input');
         fileInput.setAttribute('type', 'file');
         fileInput.setAttribute('accept', ['.pdf', '.txt']); // Only accept PDF files
         fileInput.classList.add('fileInput');
-
-
+        
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
@@ -339,31 +399,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 } else if (fileExtension === 'pdf') {
 
-                    const reader = new FileReader();
-                reader.onload = function(event) {
-                    const typedArray = new Uint8Array(event.target.result);
-                    // Using PDF.js to extract text
-                    pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
-                        pdf.getPage(1).then(function(page) { // Fetching first page
-                            page.getTextContent().then(function(textContent) {
-                                let text = '';
-                                textContent.items.forEach(function(item) {
-                                    text += item.str + ' ';
-                                });
-                                text1.textContent = text;
-                                localStorage.setItem('savedText1', text1.textContent);
+                    const formData = new FormData();
+                    formData.append('pdfFile', file);
 
-                            });
-                        });
+                    // sending data for Python processing
+                    fetch('/extract_pdf_text', {
+                        method: 'POST',
+                        body: formData,
+                    })     
+                    .then(response => response.json())
+                    .then(data => {
+
+                        text = data['pdfText'];
+                        text1.innerText = text;
+                        localStorage.setItem('savedText1', text1.innerText);
+                        
+                    })
+                    .catch(error => {
+                        console.error('Error calling Python:', error);
                     });
-                };
-                reader.readAsArrayBuffer(file);
+                    
                 }
             }
         });
 
         // Trigger the file input dialog
         fileInput.click();
+
 });
 
 importButton2.addEventListener('click', function() {
@@ -393,33 +455,32 @@ importButton2.addEventListener('click', function() {
 
             } else if (fileExtension === 'pdf') {
 
-                const reader = new FileReader();
-            reader.onload = function(event) {
-                const typedArray = new Uint8Array(event.target.result);
-                // Using PDF.js to extract text
-                pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
-                    pdf.getPage(1).then(function(page) { // Fetching first page
-                        page.getTextContent().then(function(textContent) {
-                            let text = '';
-                            textContent.items.forEach(function(item) {
-                                text += item.str + ' ';
-                            });
-                            text2.textContent = text;
-                            localStorage.setItem('savedText2', text2.textContent);
+                const formData = new FormData();
+                formData.append('pdfFile', file);
 
+                // sending data for Python processing
+                fetch('/extract_pdf_text', {
+                    method: 'POST',
+                    body: formData,
+                })     
+                .then(response => response.json())
+                .then(data => {
 
-                        });
-                    });
+                    text = data['pdfText'];
+                    text2.innerText = text;
+                    localStorage.setItem('savedText2', text2.innerText);
+                    
+                })
+                .catch(error => {
+                    console.error('Error calling Python:', error);
                 });
-            };
-            reader.readAsArrayBuffer(file);
             }
         }
     });
 
     // Trigger the file input dialog
     fileInput.click();
-});
+    });
 
 
     // Close the popup when clicking outside of it
@@ -575,8 +636,8 @@ importButton2.addEventListener('click', function() {
             case "guide_french":
                 popupTitle.textContent = "Guide pour comparaison de textes";
                 popupMessage.textContent = `Cet outil permet de comparer deux textes en utilisant plusieurs méthodes de similarité : lexicale, avec des embeddings, ou les deux (hybride).
-Deux phrases similaires sont surlignées dans la même couleur.
-Pour chaque méthode, vous pouvez utiliser plusieurs métriques pour mesurer la similarité.`;
+    Deux phrases similaires sont surlignées dans la même couleur.
+    Pour chaque méthode, vous pouvez utiliser plusieurs métriques pour mesurer la similarité.`;
                 popup_section_title_1.textContent = `Choisir des phrases similaires`;
                 subtitle1.textContent = 'Top% Quartile';
                 subtitle2.textContent = 'Avec score de similarité';
@@ -661,9 +722,3 @@ Pour chaque méthode, vous pouvez utiliser plusieurs métriques pour mesurer la 
 
     
 });
-
-
-
-
-
-

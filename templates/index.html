@@ -46,7 +46,7 @@
                 <select id="similarityMethod2" class = "parameter-select">
                   <option value="selection_quantile">%Top Quantile</option>
                   <option value="selection_sim_score">Similarity score</option>
-              </select>
+                </select>
                 <div id="sliderContainerConfidence" >
                   <div id="sliderValueConfidence"></div> 
                   <input type="range" id="sliderConfidence" name="slider" min="0" max="1" value="0.7" step="0.01">
@@ -66,7 +66,21 @@
                     <label for="checkbox4_lexical">Jaro-Winkler</label><br>
                   </div>
                   <br>
-                
+                  
+                  <label for="text-processing-select" class="parameter-label">Text processing</label>
+                  <select id="text-processing-select" class="parameter-select">
+                      <option value="NGRAMS" selected>N-grams</option>
+                      <option value="SENTENCES">Sentences</option>
+                  </select>
+                  <br>
+                  <br>
+                 
+                  <div id="ngrams-container">
+                    <label for="ngrams-input" id="ngrams-label" class="parameter-label">N-Grams</label>
+                    <input class="parameter-select" type="number" id="ngrams-input" name="ngrams" value="10" min="1" >
+                  </div>
+                  <br>
+
                   <div id="containerEmbeddings" class="checkboxes" style="display:none;">
                     <label for="embeddingsModelContainer1" class = "parameter-label-options">Vector distance metrics</label><br>
                     <input type="radio" id="checkbox1_embeddings" name="methods_embeddings" value="COSINE">
@@ -100,6 +114,7 @@
         </div>
         <div class="button-container">
           <button class="importButton" id="importButton1">Import Text 1</button>
+          <button class="importButton" id="findNextButton">Find next</button>
           <button class="importButton" id="importButton2">Import Text 2</button>
       </div>
       

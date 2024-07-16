@@ -4,9 +4,17 @@ from flask import Flask, request, jsonify, render_template
 from flask import make_response
 from flask_cors import CORS
 
+"""
 from code_folder.code import call
 from code_folder.code import get_indices
 from code_folder.code import replace_sentences_html
+"""
+
+from code_folder.code2 import call
+from code_folder.code2 import get_indices
+from code_folder.code2 import replace_sentences_html
+
+import pypdf
 
 app = Flask(__name__)
 CORS(app)
@@ -29,10 +37,15 @@ def compare_texts():
     slidingValue = data['slidingValue']
     embedding_model = data['embedding'] 
     top_quantile =float(data['sliderConfidence'])
-    # precision label indicates if we use quantile or similarity score for precision selection
     precision_label = data['precisionLabel']
+    textProcess = data['textProcess']
+    ngramsInput = data['ngramsInput']
     
-    df_comp = call(text1Text, text2Text, method, slidingValue, submethods, embedding_model, top_quantile, precision_label)
+    text1Text = text1Text.replace('\n', '\\n')
+    text2Text = text2Text.replace('\n', '\\n')
+
+    df_comp = call(text1Text, text2Text, method, slidingValue, submethods, embedding_model, top_quantile, precision_label,
+                   textProcess, ngramsInput)
     _, _, _, sent_list_1, sent_list_2 = get_indices(df_comp, text1HTML, text2HTML)
 
     # colors for highlighting
@@ -44,19 +57,43 @@ def compare_texts():
     'olive',
     'sienna',
     'orange',
-    'sage',
-    'cerulean',
+    'black',
+    'tomato',
     'plum',
     'coral',
     'slate'
-]
+    ]
     #class_text_1 =  get_indices_highlighted(text1Text, text2Text, highlight_ranges_text1, highlight_ranges_text2)
     text_1, text_2 = replace_sentences_html(text1Text, text2Text,
                                             sent_list_1, sent_list_2,
                                             colors_list)
 
     return jsonify({'text_1': text_1,
-                    'text_2': text_2})
+                    'text_2': text_2,
+                    'sent_list_1': sent_list_1,
+                    'sent_list_2': sent_list_2})
+
+
+
+
+@app.route('/extract_pdf_text', methods=['GET', 'POST'])
+def extract_pdf_text():
+    if 'pdfFile' not in request.files:
+        return jsonify({'error': 'No PDF file provided'}), 400
+    
+    def extract_text_from_pdf(pdf_file):
+        text = ""
+        pdf_reader = pypdf.PdfReader(pdf_file)
+        num_pages = len(pdf_reader.pages)
+        for page_num in range(num_pages):
+            page = pdf_reader.pages[page_num]
+            text += page.extract_text()
+        return text
+
+    pdf_file = request.files['pdfFile']
+    text = extract_text_from_pdf(pdf_file)
+
+    return jsonify({'pdfText': text})
 
 if __name__ == '__main__':  
     app.run(debug=True)

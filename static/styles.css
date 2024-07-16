@@ -17,6 +17,7 @@ body {
     margin-left: 20%;
 
     margin-bottom: 50px;
+    overflow-y: auto;
 }
 
 .text-container {
@@ -134,7 +135,6 @@ button:active {
 }
 
 .parameter-label-options {
-    
     font-weight: bold;
     color: #e58174; /* Optional: Adjust text color */
 }
@@ -445,4 +445,8 @@ button:active {
 
 .importButton:active {
     background-color: #7894b3;
+}
+
+#ngrams-container {
+    display: none;
 }
