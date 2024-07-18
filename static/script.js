@@ -46,7 +46,7 @@ document.getElementById('submitButton').addEventListener('click', function() {
     button.classList.add('loading');
     button.disabled = true;
     button.textContent = "Loading ...";
-
+    
     // Getting selected checkbox value
     var containerLexical = document.getElementById("containerLexical");
     var containerEmbeddings = document.getElementById("containerEmbeddings");
@@ -101,6 +101,9 @@ document.getElementById('submitButton').addEventListener('click', function() {
     var textProcess = document.getElementById('text-processing-select');
     var ngramsInput = document.getElementById('ngrams-input');
 
+    var nb_sentences_value = document.getElementById('nb_sentences').value;
+
+
     // variables used for Python code
     var data = {
         text1Text: text1Text,
@@ -114,7 +117,8 @@ document.getElementById('submitButton').addEventListener('click', function() {
         sliderConfidence: sliderConfidence,
         precisionLabel: precisionLabel,
         textProcess: textProcess.value,
-        ngramsInput: ngramsInput.value
+        ngramsInput: ngramsInput.value,
+        nb_sentences_value : nb_sentences_value
     };
 
     // sending data for Python processing
@@ -142,11 +146,8 @@ document.getElementById('submitButton').addEventListener('click', function() {
         pairedSentences2 = sent_list_2;
 
 
-
         findNextButton = document.getElementById('findNextButton');
         findNextButton.addEventListener('click', function() {
-
-            console.log(pairedSentences1);
         
             text1 = document.getElementById('text1');
             text2 = document.getElementById('text2');
@@ -154,22 +155,20 @@ document.getElementById('submitButton').addEventListener('click', function() {
             function scrollToSubstring(textid, substring) {
                 textField = document.getElementById(textid);
                 innerText = textField.innerText.replace(/\n/g, '\\n');
-
+                
                 var index = innerText.indexOf(substring);
                 if (index !== -1) {
-                    textField.scrollTop = textField.scrollHeight * (index / innerText.length);
+                    textField.scrollTop = textField.scrollHeight * (index / innerText.length) - 200;
                 }
             }
-
+            
             scrollToSubstring("text1", pairedSentences1[pairedIndex]);
             scrollToSubstring("text2", pairedSentences2[pairedIndex]);
-
-
+            
             pairedIndex = pairedIndex + 1;
             if (pairedIndex === pairedSentences1.length){
                 pairedIndex = 0;
             }
-
         });
         
     })
@@ -195,15 +194,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var radiosLexical = containerLexical.querySelectorAll('input[name="methods_lexical"]');
     var radiosSemantic = containerEmbeddings.querySelectorAll('input[name="methods_embeddings"]');
+    var sliderValueConfidence = document.getElementById('sliderValueConfidence');
 
 
     var precisionSelector = document.getElementById('similarityMethod2');
     var slider_precision = document.getElementById('slider_precision');
+    
     precisionSelector.addEventListener('change', function() {
         if (precisionSelector.value === 'selection_quantile'){
             slider_precision.textContent = 'Top% Quantile';
+            number_sentences.style.display = 'none';
+            sliderConfidence.style.display = 'block';
+            sliderValueConfidence.style.display = 'block';
         } else if (precisionSelector.value === 'selection_sim_score'){
             slider_precision.textContent = 'Similarity score';
+            sliderConfidence.style.display = 'block';
+            number_sentences.style.display = 'none';
+            sliderValueConfidence.style.display = 'block';
+        } else if (precisionSelector.value === 'selection_sentences') {
+            slider_precision.textContent = 'Number of sentences/chunks';
+            sliderConfidence.style.display = 'none';
+            
+            number_sentences = document.getElementById('nb_sentences');
+            number_sentences.style.display = 'block';
+            sliderConfidence.style.display = 'none';
+            sliderValueConfidence.style.display = 'none';
         }
     });
     
@@ -411,6 +426,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(data => {
 
                         text = data['pdfText'];
+                        text = text.replace(/\n/g, ' ');
                         text1.innerText = text;
                         localStorage.setItem('savedText1', text1.innerText);
                         
@@ -467,6 +483,7 @@ importButton2.addEventListener('click', function() {
                 .then(data => {
 
                     text = data['pdfText'];
+                    text = text.replace(/\n/g, ' ');
                     text2.innerText = text;
                     localStorage.setItem('savedText2', text2.innerText);
                     

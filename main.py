@@ -40,12 +40,13 @@ def compare_texts():
     precision_label = data['precisionLabel']
     textProcess = data['textProcess']
     ngramsInput = data['ngramsInput']
+    nb_sentences_value = data['nb_sentences_value']
     
     text1Text = text1Text.replace('\n', '\\n')
     text2Text = text2Text.replace('\n', '\\n')
 
     df_comp = call(text1Text, text2Text, method, slidingValue, submethods, embedding_model, top_quantile, precision_label,
-                   textProcess, ngramsInput)
+                   textProcess, ngramsInput, nb_sentences_value)
     _, _, _, sent_list_1, sent_list_2 = get_indices(df_comp, text1HTML, text2HTML)
 
     # colors for highlighting
@@ -61,7 +62,19 @@ def compare_texts():
     'tomato',
     'plum',
     'coral',
-    'slate'
+    'indigo',
+    'green',
+    'purple',
+    'red',
+    'cyan',
+    'magenta',
+    'lime',
+    'pink',
+    'azure',
+    'beige',
+    'brown',
+    'gold',
+    'gray'
     ]
     #class_text_1 =  get_indices_highlighted(text1Text, text2Text, highlight_ranges_text1, highlight_ranges_text2)
     text_1, text_2 = replace_sentences_html(text1Text, text2Text,

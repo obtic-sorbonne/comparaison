@@ -38,7 +38,7 @@ body {
     resize: none;
     margin-right: 5px; /* Space between text fields */
     overflow: auto; /* Enable scrollbar when content exceeds height */
-
+    text-align: justify;
 }
 
 .textfield:last-child {
@@ -449,4 +449,9 @@ button:active {
 
 #ngrams-container {
     display: none;
+}
+
+.nb_sentences{
+
+    text-align: center;
 }
