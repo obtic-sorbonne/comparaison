@@ -11,3 +11,12 @@ It pairs similar sentences based on the selected metrics.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+<h2>Instructions to install</h2>
+
+
+<h2>Authors</h2>
+Made during a 2-months internship in the ObTIC Sorbonne Universite team.
+Author: Clément MARIE
+Supervised by: Motasem Alrahabi
