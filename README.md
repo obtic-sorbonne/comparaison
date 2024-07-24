@@ -8,5 +8,6 @@ It pairs similar sentences based on the selected metrics.
 3. Open `http://127.0.0.1:5000` in web browser.
 
 
+## License
 
-
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
