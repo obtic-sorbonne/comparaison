@@ -170,6 +170,17 @@ document.getElementById('submitButton').addEventListener('click', function() {
                 pairedIndex = 0;
             }
         });
+
+        function simulateClick(button) {
+            const event = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window
+            });
+
+            button.dispatchEvent(event);
+        }
+        simulateClick(findNextButton);
         
     })
     .catch(error => {
