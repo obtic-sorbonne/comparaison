@@ -706,7 +706,8 @@ document.head.appendChild(style);
     var hybrid_method_text_1 = document.getElementById('hybrid_method_text_1');
     var entities_search_1 = document.getElementById('entities_search_1');
     var entities_search_text_1 = document.getElementById('entities_search_text_1');
-
+    var subtitle0Content = document.getElementById('subtitle0Content');
+    var popup_section_title_0 = document.getElementById('popup_section_title_0');
 
     languageGuideSelect.addEventListener('change', function() {
         var selectedLanguage = languageGuideSelect.value;
@@ -719,6 +720,9 @@ document.head.appendChild(style);
                 popup_section_title_1.textContent = `Choisir des phrases similaires`;
                 subtitle1.textContent = 'Top% Quartile';
                 subtitle2.textContent = 'Avec score de similarité';
+
+                popup_section_title_0.textContent = 'Temps de calcul';
+                subtitle0Content.textContent = 'Pour un PDF de 30 pages, le temps de processing (N-grams 10) est de 12s avec méthode lexicale, et 45s avec méthode embeddings. Pour un PDF de 300 pages, le temps de processing (N-grams 10) est de 2min 45s avec méthode lexicale, et 4min 20s avec méthode embeddings.';
                 subtitle1Content.textContent = `Vous devez ajuster le curseur pour définir ce qu'est le quantile : le seuil en dessous duquel un certain pourcentages des phrases les plus
                 similaires se situe.
                 \nSi le quantile est de 0.9, le top 10 % des phrases les plus similaires sont appariées. Si le quantile est de 0.1, ce sont les Top 90 % plus similaires.`;
@@ -764,7 +768,9 @@ document.head.appendChild(style);
             subtitle1Content.textContent = `You have to adjust the slider to define what the quantile is: the threshold below which a certain percentage
                 of the most similar sentences falls.\n
                 If the quantile is 0.9, the top 10% most similar sentences are paired. If the quantile is 0.1, it's the top 90%.
-            `
+            `;
+            popup_section_title_0.textContent = 'Computation time';
+            subtitle0Content.textContent = 'For a 30-page PDF, the processing time (N-grams 10) is 12 seconds with the lexical method, and 45 seconds with the embeddings method. For a 300-page PDF, the processing time (N-grams 10) is 2 minutes 45 seconds with the lexical method, and 4 minutes 20 seconds with the embeddings method.';
             popup_section_title_2.textContent = 'Lexical similarity';
             popup_section_text_2.textContent  = `Lexical similarity measures how similar two pieces of text are based on their words and their arrangement.
               It relies on the exact words used in the text, comparing text at the surface level.`;
