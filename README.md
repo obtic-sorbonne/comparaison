@@ -3,6 +3,7 @@ This tool is a web interface allowing to compare lexically and semantically two 
 It pairs similar sentences based on the selected metrics.
 
 <h2>Instructions to install</h2>
+
 1. Make sure a recent version of Python is installed on computer.<br>
 
 2. Download this repo and install libraries by typing in the terminal: `pip install -r requirements.txt` (or pip3.10) <br>
