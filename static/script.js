@@ -93,7 +93,7 @@ document.getElementById('submitButton').addEventListener('click', function() {
     }
 
     var slidingValue = valueDisplay.textContent;   
-    const sliderConfidence = document.getElementById('sliderConfidence').value;
+    let sliderConfidence = document.getElementById('sliderConfidence').value;
 
     var similarityMethod2 = document.getElementById('similarityMethod2');
     var precisionLabel = similarityMethod2.value;
@@ -181,6 +181,33 @@ document.getElementById('submitButton').addEventListener('click', function() {
             button.dispatchEvent(event);
         }
         simulateClick(findNextButton);
+
+
+        // highlighting specific word
+        const entity_button = document.getElementById('exact-diff-button');
+        if (entity_button.style.display === 'block'){
+         const search_entity = document.getElementById('search_entity');
+            const searchTerm = search_entity.value.trim();
+            text_1 = document.getElementById('text1');
+            text_2 = document.getElementById('text2');
+            color = "yellow";
+            function highlightWord(element) {
+                const originalText = element.innerHTML;
+                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                const newText = originalText.replace(regex, `<span class="highlight">$1</span>`);
+                element.innerHTML = newText;
+            }
+    
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .highlight {
+                    color: ${color};
+                }
+            `;
+            highlightWord(text_1);
+            highlightWord(text_2);
+        }
+        
         
     })
     .catch(error => {
@@ -210,6 +237,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var precisionSelector = document.getElementById('similarityMethod2');
     var slider_precision = document.getElementById('slider_precision');
+
+    //var sliderConfidence = document.getElementById('sliderConfidence').value;
+    
     
     precisionSelector.addEventListener('change', function() {
         if (precisionSelector.value === 'selection_quantile'){
@@ -621,6 +651,26 @@ importButton2.addEventListener('click', function() {
         // Update text content with filtered results
         text_1.textContent = filteredText1;
         text_2.textContent = filteredText2;
+
+        color = "yellow";
+        function highlightWord(element) {
+            const originalText = element.innerHTML;
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            const newText = originalText.replace(regex, `<span class="highlight">$1</span>`);
+            element.innerHTML = newText;
+        }
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .highlight {
+                color: ${color};
+            }
+        `;
+        highlightWord(text_1);
+        highlightWord(text_2);
+
+
+document.head.appendChild(style);
     }
 
     // Function to handle paste events for textfields
@@ -740,6 +790,7 @@ importButton2.addEventListener('click', function() {
         }
     })
 
+    var selectedLanguage = languageGuideSelect.value;
     switch (selectedLanguage) {
         case "Français":
             popupTitle.textContent = "Guide pour comparaison de textes";
