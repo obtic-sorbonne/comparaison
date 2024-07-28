@@ -7,7 +7,7 @@ The this tool allows you to upload large text files (hundreds of pages) and find
 <h2>Instructions to install</h2>
 1. Make sure a recent version of Python is installed on computer.<br>
 2. Download this repo and install libraries by typing in the terminal: `pip install -r requirements.txt`<br>
-3. In terminal, type `python main.py`
+3. In terminal, type `python main.py` <br>
 4. Open `http://127.0.0.1:5000` in web browser.
 
 <h2>Authors</h2>
