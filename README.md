@@ -1,4 +1,4 @@
-<h2>TextSync - Text alignment tool</h2>
+<h2>VERSUS - Text comparison tool</h2>
 This tool is a web interface allowing to compare lexically and semantically two texts.<br>
 It pairs similar sentences based on the selected metrics. <br><br>
 
