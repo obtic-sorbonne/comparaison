@@ -734,20 +734,63 @@ document.head.appendChild(style);
         switch (selectedLanguage) {
             case "guide_french":
                 popupTitle.textContent = "Guide pour comparaison de textes";
-                popupMessage.textContent = `Cet outil permet de comparer deux textes en utilisant plusieurs méthodes de similarité : lexicale, avec des embeddings, ou les deux (hybride).
-    Deux phrases similaires sont surlignées dans la même couleur.
-    Pour chaque méthode, vous pouvez utiliser plusieurs métriques pour mesurer la similarité.`;
+                popupMessage.textContent = `Cet outil permet de comparer deux textes (en anglais ou en français), en utilisant plusieurs méthodes de similarité : lexicale, avec des embeddings, ou les deux (hybride). Deux phrases similaires sont surlignées dans la même couleur. Pour chaque méthode, vous pouvez utiliser plusieurs métriques pour mesurer la similarité.
+On peut charger les textes à partir des boutons "Import", et le bouton "Find next" permet de naviguer d'un passage à l'autre, dans un ordre de similarité décroissant.`;
 
-            
+        
+        title_sim.textContent = "Méthode de calcul de similarité";
+        tile_sim_content.textContent = "L'outil offre 3 méthodes de comparaison:";
+        sub_title_sim.textContent = "1 - Similarité lexicale";
+        sub_title_sim_content.textContent = `
+        La similarité lexicale évalue la similitude entre deux passages de texte en analysant leurs mots et leur agencement. Elle se base sur la forme des mots dans le texte, comparant ainsi les structures textuelles au niveau de la surface. L’utilisateur peut choisir entre l’un de ces 4 métriques pour la comparaison : Jaccard, Levenstein, Hamming ou Jaro-Winker.
+        `; 
+        
+        title_embeddings.textContent = "2 - Similarité avec les embeddings";
+        sub_embeddings_content.textContent = `
+        L'utilisation des embeddings prend en compte la similarité sémantique. Elle repose sur les concepts sous-jacents et la compréhension contextuelle du langage, plutôt que sur la ressemblance formelle. L’utilisateur peut choisir entre l’un de ces 3 métriques pour la comparaison : Cosinus, Euclidien ou Produit scalaire. On peut également choisir parmi 3 modèles de langue disponibles : AllMiniLM-L12- v2, BertBase ou DistiluseBase.
+        `;
 
-                break;
+        title_hybrid.textContent = "3 - Méthode hybride";
+        hybrid_method_text_1.textContent = `
+        La méthode hybride prend en compte à la fois la méthode lexicale et celle utilisant les embeddings. Utilisez le curseur pour choisir quelle méthode vous souhaitez utiliser le plus. Une valeur de 0 utilise uniquement les embeddings, une valeur de 1 utilise uniquement la méthode lexicale, et une valeur de 0.5 utilise les deux méthodes de manière égale.
+        `;
+
+        popup_section_title_0.textContent = "Type de segments à comparer";
+        subtitle0Content.textContent = "On peut choisir entre des phrases et des n-grammes.";
+
+        popup_section_title_1.textContent = "Précision sur les passages à afficher";
+        popup_section_title_1_content.textContent = "La précision sur la similarité entre les passages à comparer est paramétrable :";
+
+        subtitle1.textContent = "1 - Top% Quartile";
+        subtitle1Content.textContent = "Vous pouvez ajuster le curseur pour définir ce qu'est le quantile : le seuil en dessous duquel un certain pourcentage des phrases les plus similaires se situe. Par exemple, si le quantile est de 0.9, le top 10 % des phrases les plus similaires sont appariées. Si le quantile est de 0.1, ce sont les Top 90 % plus similaires.";
+
+        subtitle2.textContent = "2 - Score de similarité";
+        subtitle2Content.textContent = "Vous pouvez ajuster le curseur pour définir le score de similarité minimal. Les paires de phrases auront des scores de similarité supérieurs à ce score. Par exemple, si le score est de 0.9, les paires de phrases auront un score de similarité supérieur à 0.9.";
+
+        subtitle3.textContent = "3 - Nombre de phrases ou des n-grammes";
+        subtitle3Content.textContent = "Choisir un nombre maximum de résultats à afficher.";
+
+        entities_search_1.textContent = "Recherche d'entités";
+        entities_search_text_1.textContent = `Vous pouvez filtrer et sélectionner des phrases dans les deux textes contenant un mot spécifique comme un nom d'entité (appuyez sur Entrée après la saisie d’un terme).`;
+
+        exact_diff_1.textContent = "Afficher les différences exactes";
+        exact_diff_text_1.textContent = `Dans le mode recherche d'entités, le bouton "Exact diff" affiche les différences exactes entre les phrases. En rouge sont les suppressions et en vert sont les ajouts. Cette fonctionnalité est pertinente quand les textes à comparer sont courts.`;
+
+
+        calc_title.textContent = "Temps de calcul";
+        calc_title_content.textContent = "Pour un fichier PDF de 30 pages, le temps de traitement (N-grams 10) est environ de 12s avec la méthode lexicale, et de 45s avec la méthode des embeddings. Pour un fichier PDF de 300 pages, le temps de traitement (N-grams 10) est de 2min 45s avec la méthode lexicale, et 4min 20s avec la méthode des embeddings.";
+
+        final.textContent = `Travail réalisé par Clément MARIE sous la direction de Motasem ALRAHABI (Sorbonne Université).\n\n
+Pour toute question, merci de nous écrire : motasem.alrahabi@gmail.com`;
+
+                break;  
 
 
             case "guide_english":
                 popupTitle.textContent = "Guide for Text comparison";
-                popupMessage.textContent = `This tool allows to compare two texts based on several similarity methods: lexical, with embeddings, or both (hybrid).
-            Two similar sentences are highlighted in the same color.
-            For each method, you can use several metrics to measure similarity.`;
+                popupMessage.textContent = `
+                This tool allows you to compare two texts (in English or French) using several similarity methods: lexical, with embeddings, or both (hybrid). Similar sentences are highlighted in the same color. For each method, you can use several metrics to measure similarity. You can load texts using the "Import" buttons, and the "Find next" button allows you to navigate from one passage to another in decreasing order of similarity.
+                `;
             
                 title_sim.textContent = "Method for calculating similarity";
                 tile_sim_content.textContent = "The tool offers 3 comparison methods:";

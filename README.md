@@ -1,8 +1,8 @@
 <h2>VERSUS - Text comparison tool</h2>
 This tool is a web interface allowing to compare lexically and semantically two texts.<br>
-It pairs similar passages based on the selected metrics. <br><br>
+It pairs similar sentences based on the selected metrics. <br><br>
 
-The tool allows you to upload large text files (hundreds of pages) and find pairs of sentences in reasonable time (few minutes at most).<br>
+The this tool allows you to upload large text files (hundreds of pages) and find pairs of sentences in reasonable time (few minutes at most).<br>
 
 <h2>Instructions to install</h2>
 
